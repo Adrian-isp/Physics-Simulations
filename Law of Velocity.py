@@ -97,6 +97,12 @@ ani1 = FuncAnimation(fig,
 plt.show()
 plt.close(fig)
 
+"""
+ADD THE FILL_BETWEEN
+Animated the area under the curve
+
+"""
+
 fig, ax = plt.subplots(dpi = 200)
 
 ax.set_title("Linear motion graph", fontdict= {'fontsize' : 15})
@@ -116,11 +122,15 @@ y_values = []
 
 fill = ax.fill_between(x_values, y_values, np.zeros_like(y_values),
                 color = "orange", alpha = 0.5, label = '$\Delta$d')
+
+#fill = ax.fill_between(time, velocity_values, np.zeros_like(velocity_values), color = "orange", alpha = 0.5, label = '$\Delta$d')
 ax.legend(loc = 'upper left')
 
 
 ax.set_ylim(time_0-1, time_1+1)
 ax.set_ylim(0-2, max_velocity(time_0, time_1)+2)
+
+#fig.savefig("LinearMotion/Area_under_graph.png")
 
 def update_fill(frame):
     x_values = time[:frame]
