@@ -12,62 +12,74 @@ distance - meters
 time - seconds
 """
 
-#constants:
-gravity = 9.81
+class Projectile:
+    #constants:
+    gravity = 9.81
 
-def get_v_x_launch(launch_velocity: int, launch_angle: int):
-    """Compute x velocity at launch, convert angle to radians"""
-    angle_radians = launch_angle / 180.0 * np.pi
-    v_x = launch_velocity * np.cos(angle_radians)
-    return np.round(v_x, 2)
+    def __init__(self, launch_velocity: int, launch_angle: int):
+        self.launch_velocity = launch_velocity
 
-def get_v_y_launch(launch_velocity: int, launch_angle: int):
-    """Compute y velocity at launch, convert angle to radians"""
-    angle_radians = launch_angle / 180.0 * np.pi
-    v_y = launch_velocity * np.sin(angle_radians)
-    return np.round(v_y, 2)
+        """Convert angle to radians"""
+        self.angle_radians = launch_angle / 180 * np.pi
+
+        """Compute x velocity at launch"""
+        self.v_x_launch = np.round(self.launch_velocity * np.cos(self.angle_radians), 3)
+        """Compute y velocity at launch"""
+        self.v_y_launch = np.round(self.launch_velocity * np.sin(self.angle_radians), 3)
+
+        """Compute flight time with quadratic ecuation:
+        y=0 => g/2 * t^2 + v_y0 * t = 0
+        => t = 0 or t = 2 * v_y0 / g"""
+        self.flight_time = np.round(2 * self.v_y_launch / self.gravity, 3)
     
-def get_x_position(time_spot: float, v_x_launch: float):
-    """Compute x position at t time:    x(t) = v_x0 * t"""
-    x = v_x_launch * time_spot
-    return np.round(x, 2)
+    def get_x_position(self, time_spot: float):
+        """Compute x position at t time:    x(t) = v_x0 * t"""
 
-def get_y_position(time_spot: float, v_y_launch: float):
-    """Compute y position at t time:    y(t) = v_y0 * t - g*(t^2)/2"""
-    y = v_y_launch * time_spot - gravity * np.pow(time_spot, 2) / 2
-    return np.round(y, 2)
+        if np.any(time_spot) > self.flight_time or np.any(time_spot) < 0:
+            raise ValueError(f"Invalid time: {time_spot}, value must be between 0 and {self.flight_time} seconds")
 
-def v_y(time_spot: float, v_y_launch: float):
-    """Compute vertical velocity at t time: v_y(t) = v_y0 - g*t"""
-    v_y = v_y_launch - gravity * time_spot
-    return np.round(v_y, 2)
+        x = self.v_x_launch * time_spot
+        return np.round(x, 3)
 
-def max_altitude_time(v_y_launch: float):
-    """Max altitude => v_y = 0 => v_y0 = gt => t = v_y0 / g"""
-    return np.round(v_y_launch / gravity, 3)
+    def get_y_position(self, time_spot: float):
+        """Compute y position at t time:    y(t) = v_y0 * t - g*(t^2)/2"""
 
-def max_altitude(v_y_launch: float):
-    """Plug in the max altitude time into the height formula 
-    y = v_y0 * t + g/2 * t^2"""
-    return get_y_position(max_altitude_time(v_y_launch), v_y_launch)
+        if np.any(time_spot) > self.flight_time or np.any(time_spot) < 0:
+            raise ValueError(f"Invalid time: {time_spot}, value must be between 0 and {self.flight_time} seconds")
 
-def flight_time(v_y_launch: float):
-    """Compute flight time with quadratic ecuation:
-    y=0 => g/2 * t^2 + v_y0 * t = 0
-    => t = 0 or t = 2 * v_y0 / g"""
-    return np.round(2 * v_y_launch / gravity, 3)
+        y = self.v_y_launch * time_spot - self.gravity * np.pow(time_spot, 2) / 2
+        return np.round(y, 3)
 
-def range(v_x_launch: float, v_y_launch: float):
-    """Compute the range of the projectile"""
-    return np.round(v_x_launch * flight_time(v_y_launch), 2)
+    def get_v_y(self, time_spot: float):
+        """Compute vertical velocity at t time: v_y(t) = v_y0 - g*t"""
 
-#example:
-launch_velocity = 100
-launch_angle = 60
+        if np.any(time_spot) > self.flight_time or np.any(time_spot) < 0:
+            raise ValueError(f"Invalid time: {time_spot}, value must be between 0 and {self.flight_time} seconds")
 
-v_x_launch = get_v_x_launch(launch_velocity, launch_angle)
-v_y_launch = get_v_y_launch(launch_velocity, launch_angle)
+        v_y = self.v_y_launch - self.gravity * time_spot
+        return np.round(v_y, 3)
 
-print(f"max altitude: {max_altitude(v_y_launch)} m at {max_altitude_time(v_y_launch)} s")
-print(f"projectile range: {range(v_x_launch, v_y_launch)} m")
-print(f"flight time: {flight_time(v_y_launch)} s")
+    def max_altitude(self):
+        """Max altitude => v_y = 0 => v_y0 = gt => t = v_y0 / g
+        Plug in the max altitude time into the height formula 
+        y = v_y0 * t + g/2 * t^2"""
+
+        time_to_max_altitude = self.v_y_launch / self.gravity
+        return self.get_y_position(time_to_max_altitude)
+
+    def range(self):
+        """Compute the range of the projectile:
+        x max = v_x_0 * flight_time"""
+        return np.round(self.v_x_launch * self.flight_time, 3)
+
+def main():
+    launch_velocity = int(input("Type the launch velocity (m/s): "))
+    launch_angle = int(input("Type the launch angle (degrees): "))
+    projectile = Projectile(launch_velocity, launch_angle)
+
+    print(f"max altitude: {projectile.max_altitude()} m")
+    print(f"flight time: {projectile.flight_time} s")
+    print(f"range: {projectile.range()} m")
+
+if __name__ == "__main__":
+    main()
