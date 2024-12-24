@@ -43,6 +43,8 @@ l_length = proj.max_altitude() * (1/np.sin(angle/180.0 * np.pi))
 l_height = np.sin(angle/180 * np.pi) * l_length
 l_length = np.cos(angle/180 * np.pi) * l_length
 ax_traj.plot([0,l_length], [0,l_height], linestyle = "--", color = "white", label = "launch angle")
+#this too:
+ax_traj.plot([-l_length, proj.range() + l_length], [0, 0], linestyle = "--", color = "White", alpha = 0.2)
 
 ax_traj.legend()
 
@@ -100,7 +102,7 @@ def update(frame):
 
 """create the animation"""
 ani1 = FuncAnimation(fig, func = update, frames = num_frames, init_func = init, interval = 30, blit = False)
-ani1.save("ProjectileMotion/Projectile_Animated.gif")
+#ani1.save("ProjectileMotion/Projectile_Animated.gif")
 
 plt.show()
 plt.close()
@@ -116,15 +118,19 @@ ax_traj.set_title("Projectile Trajectory", fontdict={"fontsize":15})
 ax_traj.set_xlabel("Horizontal Distance (m)", fontdict={"fontsize":11})
 ax_traj.set_ylabel("Height (m)", fontdict={"fontsize":11})
 
+ax_traj.set_xlim(-desired_limit, desired_limit)
+ax_traj.set_ylim(-desired_limit, desired_limit)
+
 ax_traj.grid(alpha = 0.1)
 """add the trajectory line"""
-line, = ax_traj.plot(x_data, y_data, color = "red", label = "trajectory", linewidth = 2)
+#line, = ax_traj.plot(x_data, y_data, color = "red", label = "trajectory", linewidth = 2)
 
 """Add the launch angle line"""
 l_length = proj.max_altitude() * (1/np.sin(angle/180.0 * np.pi))
 l_height = np.sin(angle/180 * np.pi) * l_length
 l_length = np.cos(angle/180 * np.pi) * l_length
 ax_traj.plot([0,l_length], [0,l_height], linestyle = "--", color = "white", label = "launch angle")
+ax_traj.plot([-l_length, proj.range() + l_length], [0, 0], linestyle = "--", color = "White", alpha = 0.2)
 
 ax_traj.legend()
 
@@ -138,13 +144,13 @@ ax_vel.grid(alpha = 0.1)
 
 """Add the velocity line and y=0"""
 vel_color = "#89f336"
-vel_line, =ax_vel.plot(timespace, v_y_data, label = "v(t)", color = vel_color, linewidth = 3)
-vel_0, = ax_vel.plot(timespace, v_0_data, color = vel_color, linestyle = "--")
-vel_fill = ax_vel.fill_between(timespace, v_y_data, v_0_data, color = vel_color, alpha = 0.5, hatch = '/', label = "height travelled")
+vel_line, =ax_vel.plot(timespace, v_y_data, label = "v(t)", color = vel_color, linewidth = 3, visible = 0)
+#vel_0, = ax_vel.plot(timespace, v_0_data, color = vel_color, linestyle = "--")
+#vel_fill = ax_vel.fill_between(timespace, v_y_data, v_0_data, color = vel_color, alpha = 0.5, hatch = '/', label = "height travelled")
 
-ax_vel.legend()
+#ax_vel.legend()
 
-fig.savefig("ProjectileMotion/Final_Graph.png")
+fig.savefig("ProjectileMotion/Initial_Graph.png")
 
 plt.show()
 plt.close()
