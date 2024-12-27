@@ -144,8 +144,9 @@ def main():
     height = float(input("input the height at which the object is dropped (meters): "))
     velocity = float(input("input the velocity of the object (m/s): "))
     angle = int(input("Enter the start angle (degrees): "))
+    length = float(input("Type the length of the object: "))
 
-    obj = FallingObject(mass, height, velocity, angle, shape="sphere", length=1)
+    obj = FallingObject(mass, height, velocity, angle, shape="cube", length = length)
 
     time_interval = float(input("Enter the desired timespot interval for the simulation (seconds): "))
 
