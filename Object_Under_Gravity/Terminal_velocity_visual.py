@@ -63,7 +63,7 @@ class Simulation:
         #Add text:
         self.force_text = self.ax.text(-0.8, self.height_data[0]+0.6, "")
 
-        self.fig.savefig("Object_under_gravity/graphics/initial_graph.png")
+        #self.fig.savefig("Object_under_gravity/graphics/initial_graph.png")
 
     def update_frame(self, frame):
         """Update rectangle position, arrows and text for each frame"""
@@ -93,7 +93,7 @@ class Simulation:
         #create the animation
         frames = len(self.force_data)
         ani = FuncAnimation(self.fig, self.update_frame, frames, interval = self.time_interval * 1000, repeat = True)
-        ani.save("Object_under_gravity/graphics/fall_animation.gif", fps = 60, dpi=200)
+        #ani.save("Object_under_gravity/graphics/fall_animation.gif", fps = 60, dpi=200)
 
         plt.show()
         plt.close()
@@ -106,7 +106,7 @@ class Simulation:
         self.weight_arrow.set_data(x=0, y=0, dx=0, dy=self.force_data[-1][0][1] / 20)
         self.drag_arrow.set_data(x=0, y=1, dx=0, dy=0)
 
-        self.fig.savefig("Object_under_gravity/graphics/final_graph.png")
+        #self.fig.savefig("Object_under_gravity/graphics/final_graph.png")
         plt.show()
         plt.close()
 
@@ -126,7 +126,7 @@ class Simulation:
         ax.plot(self.time_data[:-1], np.abs(self.velocity_data[:-1,1]), label="v(t)", color = "cyan")
         ax.legend()
 
-        fig.savefig("Object_under_gravity/graphics/velocity_graph")
+        #fig.savefig("Object_under_gravity/graphics/velocity_graph")
         plt.show()
 
 
