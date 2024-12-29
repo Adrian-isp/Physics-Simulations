@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 """
 Project: Simulating a trinary Star System
 using Newton's Law of Universal Attraction
+F = G * m1*m2 / r^2
 
 mass - tons
 distance - km
