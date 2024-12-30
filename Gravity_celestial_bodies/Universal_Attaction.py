@@ -10,6 +10,9 @@ mass - tons
 distance - km
 force - Newtons
 time - hours
+
+to do: Use classes for modularity, 
+    add a graph, make the animations
 """
 GRAVITATIONAL_CONSTANT = 6.674e-11
 
