@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 """Gravity simulation module
 Works for both 2D and 3D
-I want to add Blender visualisations later"""
+For Blender visualisation"""
 
 class CelestialBody:
     def __init__(self, mass: int, position_vector: list[int], velocity_vector: list[int], name: str = ""):
@@ -107,7 +107,7 @@ class Simulation:
         plt.show()
 
     def find_orbital_velocity(self, body1: CelestialBody, body2: CelestialBody):
-        """Estimate the value of the orbital velocity:"""
+        """Estimate the value of the orbital velocity (for debugging):"""
         weight_force = np.linalg.norm(self.get_gravity_force(body1, body2)) / 1000 #convert newtons to kg * Km/s^2
         r_distance = np.linalg.norm(body1.position - body2.position) * 1000 #convert Mm to km
 
