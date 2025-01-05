@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 """4 cycle piston engine cycle simulation
 car model: BMW M8-competition
@@ -170,15 +171,58 @@ class Piston:
         print(f"Engine power in watts: {engine_power:.2f}")
         print(f"Engine power in horsepower: {engine_power / 745 :.2f}")
 
+    def work_animation(self, cycles: int):
+        """Make an animation with the work cycle"""
+        self.reset()
+
+        for i in range(cycles):
+            self.simulate_cycle(60)
+        
+        v = self.volume_data
+        p = self.pressure_data
+
+        work_data = np.zeros_like(self.volume_data)
+
+        for index in range(len(self.volume_data) - 1):
+
+            for i in range(index + 1):
+                if v[i] != v[i+1]:
+                    work_data[index+1] += (p[i]+p[i+1]/2) * (v[i+1] - v[i])
+
+        time_data = np.linspace(0, self.cycle_time, len(self.volume_data))
+
+        plt.style.use("dark_background")
+        fig, ax = plt.subplots(dpi = 50, transparent = True)
+
+        ax.axis("off")
+        txt = ax.text(0.20, 0.5, "Work = 0", color = 'white', fontdict = {'fontsize' : 30})
+
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        
+        def update(frame):
+            work = work_data[frame]
+            txt.set_text(f"Work = {work:.2f} J")
+            return txt,
+
+        ani = FuncAnimation(fig, update, frames = len(work_data), blit = False, interval = 100)
+
+        ani.save("Four_Cycle_Engine/Work_Animation.gif", writer='imagemagick', transparent = True)
+
+        plt.show()
+
+
     def store_data(self):
         self.volume_data = np.append(self.volume_data, self.volume)
         self.pressure_data = np.append(self.pressure_data, self.pressure)
         self.temperature_data = np.append(self.temperature_data, self.temperature)
 
 s63 = Piston(89, 88.3, 10, cycle_time = 16, turbocharger = True)
-
+"""
 stroke_timesteps = 200
 
 s63.display_cycle(stroke_timesteps)
 
 s63.get_power(stroke_timesteps, 8)
+"""
+s63.work_animation(2)
