@@ -135,9 +135,10 @@ class Piston:
         ax.set_title("Pressure Volume graph")
         ax.set_xlabel("Volume (cm^32)")
         ax.set_ylabel("Pressure (bar)")
-        ax.grid()
+        ax.grid(alpha = 0.2)
 
         ax.plot(x_data, y_data, color = "cyan")
+        plt.savefig("Four_Cycle_Engine/PressureVolume_Graph.png", transparent = True)
 
         plt.show()
 
@@ -192,7 +193,7 @@ class Piston:
         time_data = np.linspace(0, self.cycle_time, len(self.volume_data))
 
         plt.style.use("dark_background")
-        fig, ax = plt.subplots(dpi = 50, transparent = True)
+        fig, ax = plt.subplots(dpi = 50)
 
         ax.axis("off")
         txt = ax.text(0.20, 0.5, "Work = 0", color = 'white', fontdict = {'fontsize' : 30})
@@ -207,7 +208,16 @@ class Piston:
 
         ani = FuncAnimation(fig, update, frames = len(work_data), blit = False, interval = 100)
 
-        ani.save("Four_Cycle_Engine/Work_Animation.gif", writer='imagemagick', transparent = True)
+        ani.save("Four_Cycle_Engine/Work_Animation.gif")
+
+        plt.show()
+
+        plt.plot(time_data*2, work_data, color = 'lime')
+        plt.title("Work over time")
+        plt.ylabel("Work(Joules)")
+        plt.xlabel("time (miliseconds)")
+        plt.grid(alpha = 0.2)
+        plt.savefig("Four_Cycle_Engine/Work_graph.png", transparent = True)
 
         plt.show()
 
@@ -221,8 +231,9 @@ s63 = Piston(89, 88.3, 10, cycle_time = 16, turbocharger = True)
 """
 stroke_timesteps = 200
 
-s63.display_cycle(stroke_timesteps)
 
 s63.get_power(stroke_timesteps, 8)
 """
+
+s63.display_cycle(200)
 s63.work_animation(2)
